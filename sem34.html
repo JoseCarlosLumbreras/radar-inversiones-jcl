@@ -168,6 +168,34 @@ footer .brand{font-family:var(--font-display);font-size:20px;color:var(--off);ma
 .hub-back-fab:hover{transform:translateY(-2px);border-color:#D8AD52;color:#D8AD52;}
 @media(max-width:600px){.hub-back-brand{display:none;}.hub-back-fab span.txt{display:none;}}
 </style>
+
+<style>
+/* ── INVESTIGAR MÁS (enlaces de búsqueda) ── */
+.research{margin-top:14px;padding:14px 16px;border-radius:10px;background:rgba(20,33,44,0.05);border:1px solid rgba(20,33,44,0.10);}
+.research-label{font-family:'IBM Plex Mono',monospace;font-size:10px;text-transform:uppercase;letter-spacing:.08em;color:#8a7a54;font-weight:600;margin-bottom:9px;}
+.research-links{display:flex;flex-wrap:wrap;gap:8px;}
+.research-links a{display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#14212C;background:#fff;border:1px solid rgba(20,33,44,0.16);padding:8px 13px;border-radius:8px;text-decoration:none;transition:border-color .15s,background .15s;}
+.research-links a:hover{border-color:#B8872A;background:#FFF8EA;}
+.research-links a .rl-i{font-size:14px;line-height:1;}
+.research-links a .rl-x{color:#8a9aaa;font-weight:400;}
+.research-note{font-size:11px;color:#6b7b88;margin-top:8px;}
+</style>
+<script>
+// Enlaces "Investigar más": noticias, LinkedIn y búsqueda web de la empresa (se abren en pestaña nueva)
+window.jclResearchLinks = function(name, country){
+  var clean = String(name||'').split(/\s+[—–\/]\s+/)[0].trim() || String(name||'');
+  var c = String(country||'').trim();
+  var enc = encodeURIComponent;
+  var gl = ({'Perú':'PE','Colombia':'CO','Chile':'CL','Ecuador':'EC'})[c] || 'PE';
+  var news = 'https://news.google.com/search?q=' + enc('"' + clean + '"' + (c ? ' ' + c : '')) + '&hl=es-419&gl=' + gl + '&ceid=' + gl + ':es-419';
+  var li   = 'https://www.linkedin.com/search/results/companies/?keywords=' + enc(clean);
+  var web  = 'https://www.google.com/search?q=' + enc(clean + (c ? ' ' + c : '') + ' empresa');
+  function a(href, ico, txt){ return '<a href="'+href+'" target="_blank" rel="noopener"><span class="rl-i">'+ico+'</span>'+txt+' <span class="rl-x">↗</span></a>'; }
+  return '<div class="research"><div class="research-label">🔎 Investigar más sobre ' + clean.replace(/[<>&"]/g,'') + '</div>'
+       + '<div class="research-links">' + a(news,'📰','Noticias recientes') + a(li,'💼','LinkedIn') + a(web,'🌐','Búsqueda web') + '</div>'
+       + '<div class="research-note">Se abren en una pestaña nueva con la información más actual.</div></div>';
+};
+</script>
 </head>
 <body>
 <div class="hub-back-bar">
@@ -398,9 +426,9 @@ const CALLOUT = "La semana del 17 al 24 de agosto tiene como protagonista indisc
         </div>
         <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
           ${webLink}
-          <button class="btn-ai" id="btnAI_${r.id}" onclick="loadAIProfile(${r.id})">🤖 Ampliar perfil con IA</button>
+          
         </div>
-        <div id="aiResult_${r.id}"></div>
+        ${jclResearchLinks(r.nombreComercial, 'Perú')}
       </div>`;
     document.getElementById('mcls').addEventListener('click',closeModal);
     overlay.classList.add('open'); document.body.style.overflow='hidden';
