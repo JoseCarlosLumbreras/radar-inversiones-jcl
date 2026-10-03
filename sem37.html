@@ -277,7 +277,7 @@ footer .brand{font-family:var(--font-display);font-size:18px;color:var(--off);ma
 @media(max-width:600px){.hub-back-brand{display:none;}.hub-back-fab span.txt{display:none;}}
 </style>
 </head>
-<body>
+<body><script>window.__initHash=location.hash;</script>
 <div class="hub-back-bar">
   <a class="hub-back-link" href="index.html">← Volver al Radar principal</a>
   <span class="hub-back-brand">José Carlos Lumbreras · Radar de Inversiones</span>
@@ -596,6 +596,7 @@ const RADAR_DATA = {"peru": {"companies": [{"id": 1, "tipo": "Inversión", "rubr
 
   function switchCountry(countryKey){
     activeCountry = countryKey;
+    try{ if(!/ficha=/.test(location.hash)) history.replaceState(null,'','#pais='+countryKey); }catch(e){}
     state = {tipo:'Todos', macro:'Todos', search:'', sort:'montoDesc'};
     const country = COUNTRIES[countryKey];
     const records = country.records;
@@ -767,11 +768,20 @@ Responde SOLO JSON sin markdown: {"resumen":"2-3 oraciones","fundacion":"N/D","e
   switchCountry('peru');
   // Abrir una ficha directamente desde un enlace: sem37.html#ficha=ID&pais=peru
   (function(){
-    var m = location.hash.match(/ficha=(\d+)/);
-    if(!m) return;
-    var id = parseInt(m[1], 10);
-    var p = location.hash.match(/pais=(\w+)/);
+    var m = (window.__initHash||"").match(/ficha=(\d+)/);
+    var p = (window.__initHash||"").match(/pais=(\w+)/);
     var pais = (p && COUNTRIES[p[1]]) ? p[1] : 'peru';
+    // Solo país (desde el hub): abrir la pestaña del país y llevar al usuario ahí
+    if(!m){
+      if(!p || !COUNTRIES[p[1]]) return;
+      if(activeCountry !== pais) switchCountry(pais);
+      setTimeout(function(){
+        var nav = document.getElementById('countryNav');
+        if(nav) window.scrollTo({top: nav.getBoundingClientRect().top + window.scrollY, behavior:'smooth'});
+      }, 150);
+      return;
+    }
+    var id = parseInt(m[1], 10);
     setTimeout(function(){
       if(activeCountry !== pais) switchCountry(pais);
       requestAnimationFrame(function(){

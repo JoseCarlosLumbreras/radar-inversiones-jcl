@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Radar de Inversiones y Estrategias Empresariales en el Perú | José Carlos Lumbreras</title>
+<title>Radar de Inversiones y Estrategias Empresariales · Región Andina | José Carlos Lumbreras</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -253,6 +253,61 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
 .rp-match-card::after{content:'→ Ver detalle';position:absolute;bottom:10px;right:14px;font-family:var(--font-mono);font-size:10px;color:var(--gold);opacity:0;transition:opacity .15s;}
 .rp-match-card{position:relative;}
 .rp-match-card:hover::after{opacity:1;}
+
+/* ── HERO MENU (acceso rápido a las 4 secciones) ── */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(340px,420px);gap:56px;align-items:center;position:relative;z-index:1;}
+.hero-main{min-width:0;}
+.hero-menu{background:rgba(22,40,60,0.72);border:1px solid var(--line-strong);border-radius:18px;padding:22px;backdrop-filter:blur(6px);box-shadow:0 20px 60px rgba(0,0,0,0.35);}
+.hm-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.hm-title{font-family:var(--font-mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);}
+.hm-live{display:inline-flex;align-items:center;gap:6px;font-family:var(--font-mono);font-size:10px;color:var(--teal);}
+.hm-live i{width:6px;height:6px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px var(--teal-dim);animation:hmPulse 2s ease-in-out infinite;}
+@keyframes hmPulse{50%{box-shadow:0 0 0 6px rgba(73,174,155,0.05);}}
+.hm-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.hm-tile{display:flex;flex-direction:column;gap:10px;padding:18px 16px 16px;border-radius:14px;background:var(--panel);border:1px solid var(--line);text-decoration:none;color:var(--off);position:relative;transition:transform .18s,border-color .18s,background .18s;min-height:150px;}
+.hm-tile:hover,.hm-tile:focus-visible{transform:translateY(-3px);border-color:var(--hm-c);background:var(--panel-2);outline:none;}
+.hm-ico{width:40px;height:40px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:var(--hm-bg);color:var(--hm-c);}
+.hm-ico svg{width:21px;height:21px;}
+.hm-name{font-family:var(--font-display);font-size:18px;font-weight:600;line-height:1.1;}
+.hm-meta{font-family:var(--font-mono);font-size:11px;color:var(--muted);line-height:1.45;margin-top:auto;}
+.hm-meta b{color:var(--hm-c);font-weight:600;}
+.hm-arrow{position:absolute;top:16px;right:14px;font-family:var(--font-mono);font-size:14px;color:var(--muted-2);transition:transform .18s,color .18s;}
+.hm-tile:hover .hm-arrow{transform:translateX(3px);color:var(--hm-c);}
+.hm-tile.t-paises{--hm-c:#D8AD52;--hm-bg:rgba(216,173,82,0.14);}
+.hm-tile.t-alertas{--hm-c:#E8A15C;--hm-bg:rgba(232,161,92,0.14);}
+.hm-tile.t-semanal{--hm-c:#49AE9B;--hm-bg:rgba(73,174,155,0.14);}
+.hm-tile.t-tend{--hm-c:#8FA9E8;--hm-bg:rgba(143,169,232,0.14);}
+.hm-flags{display:flex;gap:4px;font-size:13px;}
+#cobertura,#radar-personal,#ediciones,#tendencias{scroll-margin-top:70px;}
+@media(max-width:1080px){.hero-grid{grid-template-columns:1fr;gap:36px;}.hero-menu{max-width:620px;}}
+@media(max-width:480px){.hero-menu{padding:16px;}.hm-tile{min-height:130px;padding:14px 13px;}.hm-name{font-size:16px;}}
+
+/* ── Tarjetas de país clicables ── */
+a.region-card{text-decoration:none;color:inherit;cursor:pointer;}
+.rc-cta{margin-top:auto;padding-top:10px;border-top:1px solid var(--line);font-family:var(--font-mono);font-size:11.5px;font-weight:600;display:flex;justify-content:space-between;align-items:center;}
+.region-card.pe .rc-cta{color:var(--gold);}
+.region-card.co .rc-cta{color:#F4D03F;}
+.region-card.cl .rc-cta{color:#E07878;}
+.region-card.ec .rc-cta{color:#5CC17A;}
+.rc-cta span{transition:transform .18s;}
+a.region-card:hover .rc-cta span{transform:translateX(4px);}
+a.region-card:focus-visible{outline:2px solid var(--gold);outline-offset:2px;}
+
+/* ── Barra superior: estilo del enlace y versión móvil ── */
+.nav-radar{font-family:var(--font-mono);font-size:11px;color:var(--gold);border:1px solid rgba(216,173,82,0.35);padding:5px 12px;border-radius:100px;background:var(--gold-dim);text-decoration:none;white-space:nowrap;}
+.nav-radar:hover{background:rgba(216,173,82,0.25);}
+@media(max-width:640px){
+  nav{height:56px;padding:0 16px;gap:10px;}
+  .nav-brand{gap:10px;min-width:0;}
+  .nav-logo{width:34px;height:34px;font-size:12px;flex-shrink:0;}
+  .nav-name{font-size:14.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .nav-sub{display:none;}
+  .nav-tag{display:none;}
+  .nav-radar{padding:7px 12px;font-size:11.5px;}
+  #cobertura,#radar-personal,#ediciones,#tendencias{scroll-margin-top:62px;}
+}
+
+@media(max-width:420px){.tend-grid,.editions-grid,.grid{grid-template-columns:1fr !important;}}
 </style>
 </head>
 <body>
@@ -264,19 +319,16 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
       <div class="nav-sub">Consultoría de Economía y Negocios</div>
     </div>
   </div>
-  <a href="#radar-personal" style="font-family:var(--font-mono);font-size:11px;color:var(--gold);border:1px solid rgba(216,173,82,0.35);padding:5px 12px;border-radius:100px;background:var(--gold-dim);text-decoration:none;">🔔 Mi Radar</a>
+  <a href="#radar-personal" class="nav-radar">🔔 Mi Radar</a>
   <span class="nav-tag">📡 4 países · 2026</span>
 </nav>
 
 <section class="hero">
-  <div class="radar-wrap">
-    <div class="radar-ring"></div><div class="radar-ring"></div>
-    <div class="radar-ring"></div><div class="radar-ring"></div>
-    <div class="radar-dot"></div>
-  </div>
-  <div class="hero-eyebrow">Inteligencia Económica y de Negocios · Perú</div>
+  <div class="hero-grid">
+  <div class="hero-main">
+  <div class="hero-eyebrow">Inteligencia Económica y de Negocios · Región Andina</div>
   <h1>Radar de <em>inversiones</em> y estrategias empresariales</h1>
-  <p class="hero-desc">Seguimiento semanal de proyectos de inversión, M&A, expansiones y estrategias empresariales en el Perú. <strong>Información real y validada</strong> para la toma de decisiones ejecutivas.</p>
+  <p class="hero-desc">Seguimiento semanal de proyectos de inversión, M&A, expansiones y estrategias empresariales en <strong>Perú, Colombia, Chile y Ecuador</strong>. Información real y validada para la toma de decisiones ejecutivas.</p>
   <div class="kpi-strip">
     <div class="kpi-box gold">
       <div class="kl">Ediciones publicadas</div>
@@ -299,6 +351,40 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
       <div class="ks">Perú · Colombia · Chile · Ecuador</div>
     </div>
   </div>
+  </div>
+  <aside class="hero-menu" aria-label="Accesos del Radar">
+    <div class="hm-head">
+      <span class="hm-title">Explora el Radar</span>
+      <span class="hm-live"><i></i>Actualizado Sem. 37</span>
+    </div>
+    <div class="hm-grid">
+      <a class="hm-tile t-paises" href="#cobertura">
+        <span class="hm-arrow">→</span>
+        <span class="hm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"/></svg></span>
+        <span class="hm-name">Países</span>
+        <span class="hm-meta"><span class="hm-flags">🇵🇪 🇨🇴 🇨🇱 🇪🇨</span><b>4</b> mercados andinos</span>
+      </a>
+      <a class="hm-tile t-alertas" href="#radar-personal">
+        <span class="hm-arrow">→</span>
+        <span class="hm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M6 16V11a6 6 0 1 1 12 0v5l1.5 2h-15L6 16z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg></span>
+        <span class="hm-name">Mis alertas</span>
+        <span class="hm-meta" id="hmAlertMeta">Crea tu primera alerta</span>
+      </a>
+      <a class="hm-tile t-semanal" href="#ediciones">
+        <span class="hm-arrow">→</span>
+        <span class="hm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="15" rx="2"/><path d="M3.5 10h17M8 3v4M16 3v4"/><path d="M8 14h3M8 17h6"/></svg></span>
+        <span class="hm-name">Radar semanal</span>
+        <span class="hm-meta"><b>6</b> ediciones · última<br>07 – 11 sep 2026</span>
+      </a>
+      <a class="hm-tile t-tend" href="#tendencias">
+        <span class="hm-arrow">→</span>
+        <span class="hm-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/></svg></span>
+        <span class="hm-name">Tendencias</span>
+        <span class="hm-meta" id="hmTendMeta">Señales del mercado</span>
+      </a>
+    </div>
+  </aside>
+  </div>
 </section>
 
 
@@ -309,7 +395,7 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
     <p class="sec-desc">Desde la Semana 37, el Radar amplía su cobertura a Colombia, Chile y Ecuador. Cada edición multipaís incluye inversiones, estrategias y tendencias de mercado por país.</p>
   </div>
   <div class="region-grid">
-    <div class="region-card pe">
+    <a class="region-card pe" href="sem37.html#pais=peru" title="Ver el radar de Perú">
       <div class="rc-flag">🇵🇪</div>
       <div class="rc-name">Perú</div>
       <div class="rc-stats">
@@ -318,8 +404,9 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
         <div class="rc-stat"><span class="rsl">Tendencias</span><span class="rsv">64</span></div>
       </div>
       <span class="rc-tag pe">Cobertura desde Sem. 31</span>
-    </div>
-    <div class="region-card co">
+      <span class="rc-cta">Ver radar de Perú <span>→</span></span>
+    </a>
+    <a class="region-card co" href="sem37.html#pais=colombia" title="Ver el radar de Colombia">
       <div class="rc-flag">🇨🇴</div>
       <div class="rc-name">Colombia</div>
       <div class="rc-stats">
@@ -328,8 +415,9 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
         <div class="rc-stat"><span class="rsl">Tendencias</span><span class="rsv">12</span></div>
       </div>
       <span class="rc-tag co">🆕 Desde Sem. 37</span>
-    </div>
-    <div class="region-card cl">
+      <span class="rc-cta">Ver radar de Colombia <span>→</span></span>
+    </a>
+    <a class="region-card cl" href="sem37.html#pais=chile" title="Ver el radar de Chile">
       <div class="rc-flag">🇨🇱</div>
       <div class="rc-name">Chile</div>
       <div class="rc-stats">
@@ -338,8 +426,9 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
         <div class="rc-stat"><span class="rsl">Tendencias</span><span class="rsv">7</span></div>
       </div>
       <span class="rc-tag cl">🆕 Desde Sem. 37</span>
-    </div>
-    <div class="region-card ec">
+      <span class="rc-cta">Ver radar de Chile <span>→</span></span>
+    </a>
+    <a class="region-card ec" href="sem37.html#pais=ecuador" title="Ver el radar de Ecuador">
       <div class="rc-flag">🇪🇨</div>
       <div class="rc-name">Ecuador</div>
       <div class="rc-stats">
@@ -348,7 +437,8 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
         <div class="rc-stat"><span class="rsl">Tendencias</span><span class="rsv">8</span></div>
       </div>
       <span class="rc-tag ec">🆕 Desde Sem. 37</span>
-    </div>
+      <span class="rc-cta">Ver radar de Ecuador <span>→</span></span>
+    </a>
   </div>
 </section>
 
@@ -653,7 +743,7 @@ footer{padding:36px 6vw;border-top:1px solid var(--line);display:flex;align-item
   <div class="about-grid">
     <div>
       <div class="about-title">¿Qué es el Radar de Inversiones?</div>
-      <p class="about-text">El Radar de Inversiones y Estrategias Empresariales en el Perú es un seguimiento semanal elaborado por la consultora <strong style="color:var(--off)">José Carlos Lumbreras</strong> que mapea los principales anuncios de inversión, M&A, expansión y reposicionamiento estratégico de empresas que operan en el país.</p>
+      <p class="about-text">El Radar de Inversiones y Estrategias Empresariales es un seguimiento semanal elaborado por la consultora <strong style="color:var(--off)">José Carlos Lumbreras</strong> que mapea los principales anuncios de inversión, M&A, expansión y reposicionamiento estratégico de empresas que operan en Perú, Colombia, Chile y Ecuador.</p>
       <br>
       <p class="about-text">Diseñado para que ejecutivos y empresarios identifiquen oportunidades de negocio en la región andina, conozcan el entorno competitivo y tomen decisiones informadas en torno a los proyectos que dinamizan las economías de Perú, Colombia, Chile y Ecuador.</p>
     </div>
@@ -754,7 +844,7 @@ const TODAS_TENDENCIAS = [{"semana": "Sem. 36", "periodo": "31 ago – 06 sep", 
   };
 
   function loadAlerts(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');}catch(e){return [];}}
-  function saveAlerts(a){localStorage.setItem(STORAGE_KEY,JSON.stringify(a));}
+  function saveAlerts(a){localStorage.setItem(STORAGE_KEY,JSON.stringify(a));window.dispatchEvent(new Event('jcl-alerts-changed'));}
 
   // ── ALERT CHIPS ──
   function renderChips(){
@@ -1076,5 +1166,20 @@ const TODAS_TENDENCIAS = [{"semana": "Sem. 36", "periodo": "31 ago – 06 sep", 
 })();
 </script>
 
+
+<script>
+(function(){
+  function alertCount(){ try{ return (JSON.parse(localStorage.getItem('jcl_radar_watchlist_v1')||'[]')||[]).length; }catch(e){ return 0; } }
+  function paint(){
+    var n = alertCount(), el = document.getElementById('hmAlertMeta');
+    if(el) el.innerHTML = n ? '<b>'+n+'</b> alerta'+(n>1?'s':'')+' activa'+(n>1?'s':'')+'<br>Busca en 239 empresas' : 'Crea tu primera alerta<br>y el Radar busca por ti';
+    var t = document.getElementById('hmTendMeta');
+    if(t && typeof TODAS_TENDENCIAS !== 'undefined') t.innerHTML = '<b>'+TODAS_TENDENCIAS.length+'</b> señales del mercado<br>con lectura ejecutiva';
+  }
+  window.addEventListener('jcl-alerts-changed', paint);
+  window.addEventListener('storage', paint);
+  paint();
+})();
+</script>
 </body>
 </html>
