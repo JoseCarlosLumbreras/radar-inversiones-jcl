@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Radar de Inversiones y Estrategias — Perú | José Carlos Lumbreras</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,500;0,600;0,700;1,500&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0E1A26;--bg-2:#132437;--panel:#16283C;--panel-2:#1C3149;
+  --line:rgba(237,233,221,0.10);--line-strong:rgba(237,233,221,0.18);
+  --paper:#F4EFE3;--ink:#14212C;--off:#ECE7DA;--muted:#93A2B7;--muted-2:#5C7085;
+  --gold:#D8AD52;--gold-dim:rgba(216,173,82,0.16);
+  --teal:#49AE9B;--teal-dim:rgba(73,174,155,0.16);
+  --rose:#E07878;--rose-dim:rgba(224,120,120,0.16);
+  --violet:#9B59B6;--violet-dim:rgba(155,89,182,0.16);
+  --green:#27AE60;--green-dim:rgba(39,174,96,0.16);
+  --font-display:'Fraunces',serif;--font-body:'Inter',-apple-system,sans-serif;--font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;}html{scroll-behavior:smooth;}
+body{margin:0;background:var(--bg);color:var(--off);font-family:var(--font-body);font-size:15px;line-height:1.55;-webkit-font-smoothing:antialiased;}
+::selection{background:var(--gold);color:#14212C;}a{color:var(--gold);}
+.ticker-wrap{background:#0A141F;border-bottom:1px solid var(--line);overflow:hidden;white-space:nowrap;position:relative;height:38px;}
+.ticker-wrap::before,.ticker-wrap::after{content:"";position:absolute;top:0;bottom:0;width:60px;z-index:2;pointer-events:none;}
+.ticker-wrap::before{left:0;background:linear-gradient(90deg,#0A141F,transparent);}
+.ticker-wrap::after{right:0;background:linear-gradient(270deg,#0A141F,transparent);}
+.ticker-track{display:inline-flex;align-items:center;gap:40px;height:38px;animation:ticker 360s linear infinite;padding-left:100%;}
+.ticker-item{font-family:var(--font-mono);font-size:15px;color:var(--muted);letter-spacing:.02em;}
+.ticker-item b{color:var(--gold);font-weight:600;}
+.ticker-item b.tp{color:var(--teal);}
+.ticker-item b.ma{color:var(--violet);}
+.ticker-item b.fi{color:var(--green);}
+@keyframes ticker{from{transform:translateX(0);}to{transform:translateX(-100%);}}
+header.hero{padding:56px 6vw 48px;position:relative;overflow:hidden;
+  background:radial-gradient(ellipse 900px 500px at 85% -10%,rgba(216,173,82,0.14),transparent 60%),
+    radial-gradient(ellipse 700px 400px at 5% 0%,rgba(73,174,155,0.10),transparent 60%),var(--bg);
+  border-bottom:1px solid var(--line);}
+.eyebrow{display:flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:22px;}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--gold);box-shadow:0 0 0 4px var(--gold-dim);}
+h1.title{font-family:var(--font-display);font-weight:600;font-size:clamp(32px,4.4vw,58px);line-height:1.04;margin:0 0 18px;color:var(--off);max-width:16ch;letter-spacing:-0.01em;}
+h1.title em{font-style:italic;color:var(--gold);font-weight:500;}
+.subtitle{color:var(--muted);max-width:64ch;font-size:16px;margin:0 0 40px;}
+.subtitle strong{color:var(--off);font-weight:600;}
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);border:1px solid var(--line);border-radius:14px;overflow:hidden;}
+.kpi{background:var(--panel);padding:22px;}
+.kpi .k-label{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin-bottom:10px;}
+.kpi .k-val{font-family:var(--font-mono);font-size:clamp(20px,2.2vw,28px);font-weight:600;color:var(--off);}
+.kpi .k-sub{font-size:12px;color:var(--muted-2);margin-top:6px;}
+.kpi.gold .k-val{color:var(--gold);}.kpi.teal .k-val{color:var(--teal);}
+@media(max-width:820px){.kpi-row{grid-template-columns:repeat(2,1fr);}}
+.andes{display:block;width:100%;height:46px;}.andes path{fill:none;stroke:var(--line-strong);stroke-width:1.4;}
+section{padding:52px 6vw;}
+.section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:28px;flex-wrap:wrap;}
+.section-head h2{font-family:var(--font-display);font-weight:600;font-size:clamp(22px,2.6vw,32px);margin:0;color:var(--off);}
+.section-head .num{font-family:var(--font-mono);color:var(--gold);font-weight:600;margin-right:10px;}
+.section-desc{color:var(--muted);max-width:60ch;font-size:14.5px;margin:8px 0 0;}
+.segments{display:flex;flex-wrap:wrap;gap:8px;}
+.seg-chip{font-family:var(--font-mono);font-size:12.5px;padding:9px 14px;border-radius:999px;border:1px solid var(--line-strong);background:var(--panel);color:var(--muted);cursor:pointer;transition:all .15s;white-space:nowrap;}
+.seg-chip:hover{border-color:var(--gold);color:var(--off);}
+.seg-chip.active{background:var(--gold);border-color:var(--gold);color:#14212C;font-weight:600;}
+.seg-chip .cnt{opacity:.65;margin-left:5px;}
+.sector-bars{display:flex;flex-direction:column;gap:10px;}
+.sbar-row{display:grid;grid-template-columns:230px 1fr 120px;align-items:center;gap:14px;cursor:pointer;padding:6px 0;}
+.sbar-row:hover .sbar-label{color:var(--gold);}
+.sbar-label{font-size:13px;color:var(--off);transition:color .15s;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.sbar-track{height:8px;background:var(--panel-2);border-radius:6px;overflow:hidden;}
+.sbar-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--teal),var(--gold));}
+.sbar-val{font-family:var(--font-mono);font-size:12px;color:var(--muted);text-align:right;}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:26px;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;}
+.toolbar input[type=search]{flex:1;min-width:200px;background:var(--bg-2);border:1px solid var(--line-strong);color:var(--off);padding:10px 14px;border-radius:8px;font-family:var(--font-body);font-size:14px;}
+.toolbar input[type=search]::placeholder{color:var(--muted-2);}
+.toolbar input[type=search]:focus{outline:2px solid var(--gold);outline-offset:1px;}
+.toolbar select{background:var(--bg-2);border:1px solid var(--line-strong);color:var(--off);padding:10px 12px;border-radius:8px;font-family:var(--font-body);font-size:13.5px;}
+.type-toggle{display:flex;border:1px solid var(--line-strong);border-radius:8px;overflow:hidden;flex-wrap:wrap;}
+.type-toggle button{background:var(--bg-2);border:none;color:var(--muted);padding:10px 14px;font-size:12px;cursor:pointer;font-family:var(--font-mono);border-right:1px solid var(--line-strong);}
+.type-toggle button:last-child{border-right:none;}
+.type-toggle button.active{background:var(--gold);color:#14212C;font-weight:600;}
+.type-toggle button.active.t-est{background:var(--teal);color:#14212C;}
+.type-toggle button.active.t-ma{background:var(--violet);color:#fff;}
+.type-toggle button.active.t-fin{background:var(--green);color:#fff;}
+.result-count{font-family:var(--font-mono);font-size:12px;color:var(--muted-2);white-space:nowrap;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px;cursor:pointer;transition:transform .15s,border-color .15s,background .15s;display:flex;flex-direction:column;gap:12px;}
+.card:hover{transform:translateY(-3px);border-color:var(--gold);background:var(--panel-2);}
+.card-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.badge{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;padding:4px 9px;border-radius:5px;font-weight:600;}
+.badge.inv{background:var(--gold-dim);color:var(--gold);}
+.badge.est{background:var(--teal-dim);color:var(--teal);}
+.badge.ma{background:var(--violet-dim);color:var(--violet);}
+.badge.fin{background:var(--green-dim);color:var(--green);}
+.card-rubro{font-size:11px;color:var(--muted-2);text-transform:uppercase;letter-spacing:.04em;}
+.card h3{font-family:var(--font-display);font-size:20px;font-weight:600;margin:0;color:var(--off);}
+.card .proyecto{font-size:13px;color:var(--muted);line-height:1.5;flex:1;}
+.card-foot{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--line);}
+.card-monto{font-family:var(--font-mono);font-size:14px;color:var(--off);font-weight:600;}
+.card-monto.na{color:var(--muted-2);font-weight:400;font-size:12.5px;}
+.card-lugar{font-size:11.5px;color:var(--muted-2);text-align:right;max-width:55%;}
+.modal-overlay{position:fixed;inset:0;background:rgba(6,11,17,0.72);backdrop-filter:blur(3px);display:none;align-items:flex-start;justify-content:center;z-index:100;padding:5vh 16px;overflow-y:auto;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--paper);color:var(--ink);border-radius:16px;max-width:760px;width:100%;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,0.5);}
+.modal-head{padding:30px 34px 22px;border-bottom:1px solid rgba(20,33,44,0.1);position:relative;background:linear-gradient(180deg,rgba(216,173,82,0.10),transparent);}
+.modal-close{position:absolute;top:20px;right:20px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(20,33,44,0.15);background:transparent;color:var(--ink);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{background:rgba(20,33,44,0.06);}
+.modal-badges{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;}
+.modal h2{font-family:var(--font-display);font-size:30px;margin:0 0 4px;}
+.modal .razon{font-size:12.5px;color:#5c6b78;font-family:var(--font-mono);}
+.modal-body{padding:26px 34px 34px;}
+.mfield{margin-bottom:20px;}
+.mfield .flabel{font-family:var(--font-mono);font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:#8a7a54;margin-bottom:6px;font-weight:600;}
+.mfield .fval{font-size:14.5px;line-height:1.6;color:var(--ink);}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:22px;}
+@media(max-width:600px){.mgrid{grid-template-columns:1fr;}}
+.mgrid .fval{font-family:var(--font-mono);font-size:13.5px;}
+.profile-box{background:rgba(20,33,44,0.045);border:1px solid rgba(20,33,44,0.08);border-radius:12px;padding:18px 20px;margin-top:6px;}
+.source-line{font-size:12px;color:#6b7b88;margin-top:14px;padding-top:14px;border-top:1px dashed rgba(20,33,44,0.15);}
+.modal .btn-web{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-family:var(--font-mono);font-size:12.5px;color:#14212C;background:var(--gold);padding:9px 16px;border-radius:8px;text-decoration:none;font-weight:600;transition:opacity .15s;}
+.modal .btn-web:hover{opacity:.85;}
+.btn-ai{display:inline-flex;align-items:center;gap:6px;margin-top:10px;margin-left:8px;font-family:var(--font-mono);font-size:12.5px;color:var(--off);background:var(--panel);padding:9px 16px;border-radius:8px;border:1px solid var(--line-strong);cursor:pointer;transition:all .15s;font-weight:600;}
+.btn-ai:hover{border-color:var(--teal);color:var(--teal);}
+.ai-result{background:rgba(73,174,155,0.08);border:1px solid rgba(73,174,155,0.25);border-radius:10px;padding:14px 16px;margin-top:12px;font-size:13px;color:var(--ink);line-height:1.6;}
+.rec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px;}
+@media(max-width:880px){.rec-grid{grid-template-columns:1fr;}}
+.rec-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:24px;}
+.rec-card .rec-num{font-family:var(--font-mono);color:var(--muted-2);font-size:12px;margin-bottom:8px;}
+.rec-card h3{font-family:var(--font-display);font-size:19px;margin:0 0 10px;color:var(--gold);font-weight:600;}
+.rec-card .rec-anchor{font-size:12px;color:var(--muted-2);margin-bottom:12px;font-family:var(--font-mono);}
+.rec-card .rec-anchor b{color:var(--teal);font-weight:600;}
+.rec-card p{font-size:13.8px;color:var(--muted);line-height:1.6;margin:0 0 14px;}
+.rec-card ul{margin:0;padding-left:18px;color:var(--off);font-size:13.5px;line-height:1.7;}
+.rec-card ul li::marker{color:var(--gold);}
+.callout{border:1px solid var(--line-strong);background:linear-gradient(135deg,rgba(216,173,82,0.08),rgba(73,174,155,0.06));border-radius:14px;padding:26px 28px;margin-top:8px;}
+.callout h4{font-family:var(--font-display);font-size:18px;margin:0 0 10px;color:var(--off);}
+.callout p{margin:0;color:var(--muted);font-size:14px;line-height:1.65;}
+footer{padding:40px 6vw 60px;border-top:1px solid var(--line);}
+footer .foot-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;}
+@media(max-width:760px){footer .foot-grid{grid-template-columns:1fr;}}
+footer h5{font-family:var(--font-mono);font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted-2);margin:0 0 12px;}
+footer p,footer li{font-size:12.5px;color:var(--muted);line-height:1.7;}
+footer ul{margin:0;padding-left:16px;}
+footer .brand{font-family:var(--font-display);font-size:20px;color:var(--off);margin-bottom:10px;}
+</style>
+</head>
+<body>
+<div class="ticker-wrap" aria-hidden="true"><div class="ticker-track" id="tickerTrack"></div></div>
+<header class="hero">
+  <div class="eyebrow"><span class="dot"></span> JOSÉ CARLOS LUMBRERAS · INTELIGENCIA ECONÓMICA Y DE NEGOCIOS</div>
+  <h1 class="title">Radar de <em>inversiones</em> y estrategias empresariales en el Perú</h1>
+  <p class="subtitle">Seguimiento ejecutivo de <strong>22 anuncios</strong> de inversión, M&A, estrategia y financiamiento de empresas en el Perú, registrados entre el <strong>24 y el 31 de agosto de 2026</strong>.</p>
+  <div class="kpi-row" id="kpiRow"></div>
+</header>
+<svg class="andes" viewBox="0 0 1200 46" preserveAspectRatio="none"><path d="M0,40 L60,22 L110,34 L170,10 L230,30 L300,16 L360,36 L430,20 L500,38 L570,14 L650,32 L720,8 L800,28 L870,18 L950,36 L1020,12 L1090,30 L1150,20 L1200,34"/></svg>
+<main>
+<section id="segmentos">
+  <div class="section-head"><div>
+    <h2><span class="num">01</span>Accede por tu segmento de interés</h2>
+    <p class="section-desc">Esta semana se registraron 4 tipos de iniciativas en 8 segmentos macro-sectoriales: Inversión, M&A, Estrategia y Financiamiento.</p>
+  </div></div>
+  <div class="segments" id="segmentChips"></div>
+</section>
+<section id="panorama">
+  <div class="section-head"><div>
+    <h2><span class="num">02</span>Panorama por segmento</h2>
+    <p class="section-desc">Distribución de los 22 anuncios en 8 segmentos macro-sectoriales. Haz clic en cualquier barra para filtrar las fichas.</p>
+  </div></div>
+  <div class="sector-bars" id="sectorBars"></div>
+</section>
+<section id="empresas">
+  <div class="section-head">
+    <div><h2><span class="num">03</span>Base de empresas</h2>
+    <p class="section-desc">Filtra, busca y ordena. Haz clic en cualquier ficha para ver el detalle completo y el perfil corporativo.</p></div>
+    <div class="result-count" id="resultCount"></div>
+  </div>
+  <div class="toolbar">
+    <input type="search" id="searchInput" placeholder="Buscar empresa, proyecto o lugar…">
+    <div class="type-toggle" id="typeToggle">
+      <button data-type="Todos" class="active">Todos</button>
+      <button data-type="Inversion">Inversión</button>
+      <button data-type="M&A" class="t-ma">M&A</button>
+      <button data-type="Estrategia" class="t-est">Estrategia</button>
+      <button data-type="Financiamiento" class="t-fin">Financiamiento</button>
+    </div>
+    <select id="rubroSelect"><option value="Todos">Todos los segmentos</option></select>
+    <select id="sortSelect">
+      <option value="montoDesc">Monto: mayor a menor</option>
+      <option value="az">Empresa: A → Z</option>
+      <option value="tipo">Por tipo</option>
+    </select>
+  </div>
+  <div class="grid" id="cardGrid"></div>
+</section>
+<svg class="andes" viewBox="0 0 1200 46" preserveAspectRatio="none"><path d="M0,20 L70,34 L140,14 L210,30 L280,10 L350,28 L420,18 L500,36 L580,16 L650,32 L720,20 L800,38 L880,12 L950,30 L1020,22 L1090,34 L1150,16 L1200,26"/></svg>
+<section id="oportunidades">
+  <div class="section-head"><div>
+    <h2><span class="num">04</span>Oportunidades comerciales derivadas</h2>
+    <p class="section-desc">Lectura de José Carlos Lumbreras: qué productos y servicios pueden ofrecer empresas conexas a cada frente de inversión.</p>
+  </div></div>
+  <div class="rec-grid" id="recGrid"></div>
+  <div class="callout" style="margin-top:20px;">
+    <h4>Lectura transversal — semana del 24 al 31 de agosto 2026</h4>
+    <p id="calloutText"></p>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="foot-grid">
+    <div><div class="brand">José Carlos Lumbreras</div>
+    <p>Dashboard ejecutivo de inteligencia de negocios — semana del 24 al 31 de agosto de 2026. No constituye asesoría de inversión.</p></div>
+    <div><h5>Metodología y fuentes</h5><ul>
+      <li>Fuente primaria: relevamiento propio de anuncios corporativos (24–31 ago 2026).</li>
+      <li>Perfiles: sitios web oficiales y prensa económica especializada.</li>
+      <li>M&A: transacciones publicadas y comunicados de prensa.</li>
+    </ul></div>
+    <div><h5>Notas</h5><ul>
+      <li>"No disponible" indica que la fuente no reveló monto específico.</li>
+      <li>Perfiles ampliados vía IA generados en tiempo real.</li>
+      <li>www.josecarloslumbreras.com</li>
+    </ul></div>
+  </div>
+</footer>
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true" id="modalBox"></div>
+</div>
+<script>
+const DATA = {"records": [{"id": 1, "tipo": "Inversion", "rubro": "Energía renovable / solar", "sectorMacro": "Energía e hidrocarburos", "ruc": "20204844381", "razonSocial": "EL ROCIO (proyecto solar)", "nombreComercial": "El Rocío", "proyecto": "Construcción de central solar fotovoltaica", "detalle": "El proyecto obtuvo concesión definitiva para una central solar fotovoltaica de 1.53 MWp en Virú. La iniciativa prevé operar con recursos energéticos renovables y producir electricidad para el mercado eléctrico peruano.", "lugar": "Virú, La Libertad, Perú", "montoTxt": "No disponible", "montoUsd": null, "periodo": "2026-2027", "web": "-", "vocero": "-", "perfil": "El Rocío es un proyecto de generación solar fotovoltaica que obtuvo concesión definitiva en el 2026 para operar en Virú, La Libertad. Con 1.53 MWp de capacidad, forma parte de la creciente cartera de proyectos de energías renovables en la costa norte del Perú.", "sedes": "Virú, La Libertad, Perú.", "fuente": "MINEM / prensa especializada"}, {"id": 2, "tipo": "Inversion", "rubro": "Minería / exploración de plata y cobre", "sectorMacro": "Minería y exploración", "ruc": "-", "razonSocial": "PALAMINA CORP.", "nombreComercial": "Palamina", "proyecto": "Exploración del proyecto Galena (plata y cobre)", "detalle": "Palamina inició un programa de perforación de 2,500 metros en el proyecto Galena, con el objetivo de evaluar el potencial del yacimiento, especialmente en las áreas históricas Minas Santa Rosa, Gaspar y Chaparro.", "lugar": "Puno, Perú", "montoTxt": "No disponible", "montoUsd": null, "periodo": "2026", "web": "https://palaminacorp.com/", "vocero": "-", "perfil": "Palamina Corp. es una empresa minera junior canadiense especializada en exploración de plata y cobre en el Perú. Su proyecto Galena en Puno es el activo principal, con una campaña de perforación activa para evaluar recursos en áreas mineralizadas históricas.", "sedes": "Canadá (casa matriz); proyecto Galena, Puno, Perú.", "fuente": "palaminacorp.com"}, {"id": 3, "tipo": "Inversion", "rubro": "Inmobiliario / desarrollo urbano", "sectorMacro": "Inmobiliario y construcción", "ruc": "20173223626", "razonSocial": "MENORCA INVERSIONES S.A.C.", "nombreComercial": "Menorca", "proyecto": "Inversión en proyectos inmobiliarios activos 2026", "detalle": "Menorca prevé invertir hasta S/50 millones durante 2026 en sus proyectos actuales. La empresa mantiene 22 proyectos activos y un banco de terrenos de más de 400 hectáreas, además de evaluar nuevos desarrollos en Lima y provincias.", "lugar": "Lima y provincias, Perú", "montoTxt": "Hasta S/ 50 millones", "montoUsd": 13000000, "periodo": "2026", "web": "https://www.menorca.pe/", "vocero": "Edgar Véliz — vocero", "perfil": "Menorca Inversiones S.A.C. es una de las principales inmobiliarias peruanas con 22 proyectos activos y más de 400 hectáreas en banco de terrenos. Opera en Lima y provincias desarrollando proyectos residenciales y comerciales de diverso segmento.", "sedes": "Lima y provincias del Perú.", "fuente": "menorca.pe"}, {"id": 4, "tipo": "Inversion", "rubro": "Calzado / retail y manufactura", "sectorMacro": "Retail, moda y consumo", "ruc": "20101951872", "razonSocial": "EMPRESAS COMERCIALES S.A. (EMCOMER)", "nombreComercial": "Bata", "proyecto": "Renovación de tiendas e integración manufacturera regional", "detalle": "Bata plantea renovar su red de tiendas, mejorar la experiencia de compra y ampliar la integración manufacturera en Latinoamérica. La estrategia global a cinco años contempla una inversión de US$500M, con Perú dentro del proceso de modernización regional.", "lugar": "Perú y Latinoamérica", "montoTxt": "Parte de inversión global de US$ 500 millones (2026-2030)", "montoUsd": null, "periodo": "2026-2030", "web": "https://www.bata.com/", "vocero": "Panos Mytaros — CEO global de Bata Group", "perfil": "Bata es una de las marcas de calzado más icónicas del mundo, con más de 130 años de historia y presencia en más de 70 países. En Perú opera a través de Empresas Comerciales S.A. (Emcomer) con una extensa red de tiendas propias y concesionadas a nivel nacional.", "sedes": "Lima y principales ciudades del Perú; Latinoamérica.", "fuente": "bata.com"}, {"id": 5, "tipo": "Inversion", "rubro": "Alimentos / cacao y agroindustria", "sectorMacro": "Agroindustria y alimentos", "ruc": "20500985322", "razonSocial": "MACHU PICCHU FOODS S.A.C.", "nombreComercial": "Machu Picchu Foods", "proyecto": "Nueva línea de procesamiento y secado de cacao", "detalle": "Machu Picchu Foods prevé instalar una nueva línea en planta para ampliar capacidad de secado y procesamiento de cacao, con una capacidad adicional de 60 toneladas mensuales. El proyecto incluye inversión en infraestructura, maquinaria y servicios asociados.", "lugar": "Callao, Perú", "montoTxt": "US$ 5.6 millones", "montoUsd": 5600000, "periodo": "2026", "web": "https://www.mpf.com.pe/", "vocero": "-", "perfil": "Machu Picchu Foods S.A.C. es una empresa peruana líder en el procesamiento y exportación de cacao y café de alta calidad. Con planta en el Callao, procesa cacao de origen de diferentes regiones del Perú y exporta a mercados de Europa, Asia y América del Norte, siendo referente del cacao peruano de specialty.", "sedes": "Callao (planta), Lima, Perú.", "fuente": "mpf.com.pe"}, {"id": 6, "tipo": "Inversion", "rubro": "Minería / oro y plata", "sectorMacro": "Minería y exploración", "ruc": "20192779333", "razonSocial": "COMPAÑIA MINERA ARES S.A.C.", "nombreComercial": "Hochschild Mining — Inmaculada", "proyecto": "Aumento de inversión en mina Inmaculada", "detalle": "Hochschild elevó la inversión en la unidad Inmaculada durante el primer semestre de 2026. La compañía reportó US$69.3 millones de inversión en la operación y prevé un gasto de capital superior durante el año por perforación, desarrollo y mantenimiento.", "lugar": "Ayacucho, Perú", "montoTxt": "US$ 69.3 millones en 1S26; mayor capex esperado en 2S26", "montoUsd": 69300000, "periodo": "2026", "web": "https://www.hochschildmining.com/", "vocero": "-", "perfil": "Hochschild Mining es una empresa minera de plata y oro con operaciones en Perú, Argentina y Canadá, cotizada en la Bolsa de Valores de Londres (LSE). Su unidad Inmaculada en Ayacucho es su principal activo peruano y uno de los yacimientos de metales preciosos más importantes del país.", "sedes": "Ayacucho (mina Inmaculada); Lima (oficinas corporativas), Perú.", "fuente": "hochschildmining.com"}, {"id": 7, "tipo": "Inversion", "rubro": "Hidrocarburos / gas natural", "sectorMacro": "Energía e hidrocarburos", "ruc": "20304177552", "razonSocial": "PLUSPETROL PERU CORPORATION S.A.", "nombreComercial": "Pluspetrol", "proyecto": "Perforación de pozos en Lote 88 (Cusco)", "detalle": "Pluspetrol proyecta invertir US$100 millones en el Lote 88 para perforar dos pozos productores de gas natural y un inyector de recortes. El proyecto busca sostener la producción del yacimiento de Camisea y atender la demanda nacional de gas.", "lugar": "Cusco, Perú", "montoTxt": "US$ 100 millones", "montoUsd": 100000000, "periodo": "2026-2040", "web": "https://www.pluspetrol.net/", "vocero": "-", "perfil": "Pluspetrol es una empresa de energía argentina con presencia en varios países de Latinoamérica. En Perú opera el yacimiento gasífero de Camisea (Lote 88 y Lote 56) en Cusco, siendo uno de los principales operadores del proyecto que abastece de gas natural a Lima y el resto del país.", "sedes": "Cusco (operaciones Camisea); Lima (oficinas), Perú.", "fuente": "pluspetrol.net"}, {"id": 8, "tipo": "Inversion", "rubro": "Calzado / manufactura y retail", "sectorMacro": "Retail, moda y consumo", "ruc": "20548944733", "razonSocial": "NORTH BEACH S.A.C.", "nombreComercial": "North Beach", "proyecto": "Apertura de primeras 10 tiendas y expansión productiva", "detalle": "North Beach prevé abrir sus primeras 10 tiendas en 2027 y destinar US$5 millones a la expansión del negocio. La compañía busca incrementar manufactura local, ampliar su portafolio y crecer en mercados regionales.", "lugar": "Lima, provincias y Latinoamérica", "montoTxt": "US$ 5 millones", "montoUsd": 5000000, "periodo": "2026-2027", "web": "No confirmado", "vocero": "Giuseppe Roggero — gerente general", "perfil": "North Beach S.A.C. es una empresa peruana de calzado y moda en etapa de lanzamiento comercial. Con producción local y una propuesta de precio accesible, proyecta abrir 10 tiendas y expandirse hacia provincias y mercados regionales de Latinoamérica.", "sedes": "Lima, Perú (inicio de operaciones).", "fuente": "Prensa económica / declaración pública"}, {"id": 9, "tipo": "Inversion", "rubro": "Minería / cobre (Chile)", "sectorMacro": "Minería y exploración", "ruc": "20601980500", "razonSocial": "RIO2 S.A.C.", "nombreComercial": "Rio2 / Fenix Gold", "proyecto": "Aprobación ambiental para elevar capacidad de procesamiento", "detalle": "Rio2 obtuvo aprobación ambiental para elevar la capacidad de procesamiento del proyecto Fenix de 8,400 a 10,000 t/día. La modificación permite ampliar la producción sin cambiar sustancialmente la huella operativa del proyecto minero.", "lugar": "Proyecto Fenix, Chile", "montoTxt": "No disponible", "montoUsd": null, "periodo": "2026", "web": "https://www.rio2.com/", "vocero": "-", "perfil": "Rio2 Limited es una empresa minera canadiense con su proyecto Fenix Gold en Chile. En Perú opera a través de Rio2 S.A.C. y tiene como objetivo principal el desarrollo del yacimiento Fenix, recientemente ampliado en capacidad de procesamiento con aprobación ambiental.", "sedes": "Chile (proyecto Fenix); Perú (filial administrativa).", "fuente": "rio2.com"}, {"id": 10, "tipo": "Inversion", "rubro": "Agroexportación / berries", "sectorMacro": "Agroindustria y alimentos", "ruc": "20520866630", "razonSocial": "INKA'S BERRIES S.A.C.", "nombreComercial": "Inka's Berries", "proyecto": "Nueva planta de empaque y packing para exportación", "detalle": "Inka's Berries proyecta ampliar su capacidad logística con una nueva planta de empaque y packing, orientada a mejorar eficiencia, capacidad de atención y manejo de exportaciones de berries peruanos.", "lugar": "Perú", "montoTxt": "No disponible", "montoUsd": null, "periodo": "2026", "web": "No confirmado", "vocero": "-", "perfil": "Inka's Berries S.A.C. es una empresa agroexportadora peruana especializada en la producción y exportación de berries de alta calidad, principalmente arándanos, fresas y frambuesas. Exporta a mercados exigentes de Europa, Asia y América del Norte, siendo parte del dinámico sector de agroexportación peruano.", "sedes": "Perú (diversas regiones productoras).", "fuente": "Prensa económica / declaración pública"}, {"id": 11, "tipo": "Inversion", "rubro": "Maquinaria pesada / construcción", "sectorMacro": "Inmobiliario y construcción", "ruc": "20609878836", "razonSocial": "ZOOMLION HEAVY INDUSTRY PERU S.A.C.", "nombreComercial": "Zoomlion", "proyecto": "Nuevo almacén en Ate y expansión comercial en Perú", "detalle": "Zoomlion abrirá un almacén en Ate como parte de su estrategia de expansión en Perú, con inventario de equipos y repuestos para elevar la capacidad de atención a clientes de construcción, minería e industria.", "lugar": "Ate, Lima, Perú", "montoTxt": "≈ US$ 0.5 millones en inventario inicial", "montoUsd": 500000, "periodo": "2026", "web": "https://www.zoomlion.com/", "vocero": "-", "perfil": "Zoomlion Heavy Industry es uno de los mayores fabricantes de maquinaria de construcción del mundo, con sede en China. En Perú opera a través de Zoomlion Heavy Industry Perú S.A.C., ofreciendo grúas, excavadoras, bombas de concreto y otros equipos pesados para los sectores de construcción, minería e industria.", "sedes": "Ate, Lima, Perú.", "fuente": "zoomlion.com"}, {"id": 12, "tipo": "Inversion", "rubro": "Tecnología / servicios para Latam", "sectorMacro": "Tecnología y educación", "ruc": "-", "razonSocial": "SETI S.A.S.", "nombreComercial": "SETI", "proyecto": "Hub de servicios tecnológicos para América Latina", "detalle": "SETI instalará en Perú un hub regional de servicios tecnológicos para atender clientes de América Latina. Estima invertir entre US$2M y US$3M y proyecta que el mercado peruano represente cerca del 20% de sus ingresos en tres años.", "lugar": "Perú", "montoTxt": "US$ 2 millones a US$ 3 millones", "montoUsd": 2000000, "periodo": "2026-2028", "web": "https://www.seti.com.co/", "vocero": "Jorge Valbuena — presidente", "perfil": "SETI S.A.S. es una empresa colombiana de servicios tecnológicos y consultoría IT que instala su hub regional para América Latina en el Perú. Ofrece soluciones de transformación digital, infraestructura tecnológica y outsourcing de servicios para empresas de la región.", "sedes": "Colombia (sede); Lima, Perú (hub regional en instalación).", "fuente": "seti.com.co"}, {"id": 13, "tipo": "M&A", "rubro": "Minería / adquisición de concesiones", "sectorMacro": "Minería y exploración", "ruc": "20615271668", "razonSocial": "SOLEIL MINING", "nombreComercial": "Soleil Mining", "proyecto": "Búsqueda y compra de concesiones mineras en Cusco y Arequipa", "detalle": "Soleil Mining evalúa adquirir concesiones mineras en Cusco y Arequipa para asegurar el abastecimiento de mineral a sus plantas de procesamiento, analizando joint ventures y compras de activos con montos referenciales de US$1M a US$5M por adquisición.", "lugar": "Cusco y Arequipa, Perú", "montoTxt": "US$ 1 millón a US$ 5 millones por adquisición potencial", "montoUsd": null, "periodo": "2026-2027", "web": "-", "vocero": "-", "perfil": "Soleil Mining es una empresa minera peruana con plantas de procesamiento de minerales que busca asegurar su cadena de suministro mediante la adquisición estratégica de concesiones en regiones con alto potencial aurífero como Cusco y Arequipa.", "sedes": "Cusco y Arequipa, Perú.", "fuente": "Prensa económica / declaración pública"}, {"id": 14, "tipo": "M&A", "rubro": "Minería / oro (M&A internacional)", "sectorMacro": "Minería y exploración", "ruc": "20608291866", "razonSocial": "ALPAYANA S.A.C.", "nombreComercial": "Alpayana", "proyecto": "Compra de participación mayoritaria en Galantas Gold (Irlanda)", "detalle": "Alpayana adquirió una participación mayoritaria en Galantas Gold mediante una operación valorizada en US$61.3 millones. La transacción refuerza la estrategia de crecimiento inorgánico y diversificación internacional del grupo minero peruano.", "lugar": "Irlanda del Norte / Perú", "montoTxt": "US$ 61.3 millones aprox.", "montoUsd": 61300000, "periodo": "2026", "web": "https://www.alpayana.com/", "vocero": "-", "perfil": "Alpayana S.A.C. es un grupo minero peruano con operaciones en Perú y proyección internacional. Con esta adquisición de Galantas Gold en Irlanda del Norte, consolida una estrategia de expansión global y diversificación de activos mineros fuera de Latinoamérica.", "sedes": "Lima, Perú (corporativo); Irlanda del Norte (activo Galantas).", "fuente": "alpayana.com"}, {"id": 15, "tipo": "M&A", "rubro": "Minería / metales base (M&A)", "sectorMacro": "Minería y exploración", "ruc": "20100110513", "razonSocial": "NEXA RESOURCES S.A.A.", "nombreComercial": "Nexa Resources", "proyecto": "Boliden tomará el control de Nexa Resources", "detalle": "Boliden acordó adquirir la participación controladora de Votorantim en Nexa Resources. La operación incluye activos en Perú y Brasil y está prevista para cerrarse en 2027, sujeta a aprobaciones y condiciones regulatorias.", "lugar": "Perú y Brasil", "montoTxt": "Aprox. US$ 1,300 millones (cierre previsto 2027)", "montoUsd": null, "periodo": "2027", "web": "https://www.nexaresources.com/", "vocero": "-", "perfil": "Nexa Resources S.A.A. es una empresa minera de metales base (zinc, cobre, plomo) cotizada en NYSE y TSX, con operaciones en Perú (Cerro Lindo, El Porvenir) y Brasil. Parte del grupo Votorantim, es una de las principales productoras de zinc de Latinoamérica.", "sedes": "Lima, Perú (corporativo); múltiples operaciones en Perú y Brasil.", "fuente": "nexaresources.com"}, {"id": 16, "tipo": "Estrategia", "rubro": "Electrodomésticos / retail y tecnología", "sectorMacro": "Retail, moda y consumo", "ruc": "20601844916", "razonSocial": "GRUPO QTC S.A.C. (DREAME TECHNOLOGY)", "nombreComercial": "Dreame", "proyecto": "Expansión en malls y alianza comercial con Ripley", "detalle": "Dreame acelera su expansión en centros comerciales con módulos de experiencia y una alianza con Ripley. La marca proyecta ampliar su presencia física, entrar a nuevas categorías y fortalecer su red comercial en el Perú.", "lugar": "Lima y otras ciudades, Perú", "montoTxt": "No disponible", "montoUsd": null, "periodo": "2026-2027", "web": "https://www.dreametech.com/", "vocero": "Gustavo Hernández — gerente de Ventas para Latam", "perfil": "Dreame Technology es una marca china de electrodomésticos de alta tecnología (aspiradoras robot, secadoras de cabello, dispositivos de limpieza del hogar) con rápido crecimiento global. En Perú opera a través del Grupo QTC y ha ganado presencia en el mercado local de retail tech.", "sedes": "China (sede global); Lima, Perú (operación local a través de Grupo QTC).", "fuente": "dreametech.com"}, {"id": 17, "tipo": "Estrategia", "rubro": "Hotelería y turismo / lujo", "sectorMacro": "Hotelería y turismo", "ruc": "20510931514", "razonSocial": "PERUVIAN TOURS AGENCY S.A.C.", "nombreComercial": "Aranwa Hotels Resorts & Spas", "proyecto": "Nuevas aperturas en Perú y expansión a Costa Rica", "detalle": "Aranwa avanza con nuevas aperturas en Perú y prevé crecer en Costa Rica. La empresa trabaja en proyectos en Lima y Arequipa y evalúa una nueva operación internacional, manteniendo su estrategia de hoteles orientados a segmentos de alto valor.", "lugar": "Lima, Arequipa, Cusco y Costa Rica", "montoTxt": "US$ 28 millones en proyecto Valle Sagrado; otros montos no informados", "montoUsd": 28000000, "periodo": "2026-2027", "web": "https://www.aranwahotels.com/", "vocero": "Gonzalo Calderón Borja — gerente general", "perfil": "Aranwa Hotels Resorts & Spas es una cadena hotelera peruana de lujo con propiedades en los principales destinos turísticos del Perú: Cusco (Valle Sagrado, Cusco Colonial), Arequipa (Santa Catalina) y otros. Es referente del turismo de alto valor en el Perú y evalúa su primera expansión internacional.", "sedes": "Cusco, Arequipa, Lima, Perú; en expansión hacia Costa Rica.", "fuente": "aranwahotels.com"}, {"id": 18, "tipo": "Estrategia", "rubro": "Restaurantes / franquicias y retail food", "sectorMacro": "Retail, moda y consumo", "ruc": "20100123330", "razonSocial": "DELOSI S.A.", "nombreComercial": "Cinnabon", "proyecto": "Ampliación de portafolio y reanudación de expansión local", "detalle": "Cinnabon ampliará su portafolio hacia nuevas ocasiones de consumo y retomará la expansión física. La marca proyecta nuevas aperturas y su ingreso a provincias durante 2027, además de reforzar su oferta con productos de menor ticket.", "lugar": "Lima y provincias, Perú", "montoTxt": "No disponible", "montoUsd": null, "periodo": "2026-2027", "web": "https://www.cinnabon.com/", "vocero": "-", "perfil": "Cinnabon en Perú es operada por Delosi S.A., uno de los principales operadores de franquicias de restauración del país (también opera KFC, Pizza Hut y otros). Cinnabon es reconocida por sus rollos de canela y productos de panadería dulce, con presencia en centros comerciales de Lima.", "sedes": "Lima (centros comerciales), Perú.", "fuente": "cinnabon.com"}, {"id": 19, "tipo": "Estrategia", "rubro": "Educación superior / tecnología e IA", "sectorMacro": "Tecnología y educación", "ruc": "20211614545", "razonSocial": "UNIVERSIDAD PERUANA DE CIENCIAS APLICADAS S.A.C.", "nombreComercial": "UPC", "proyecto": "Especialización académica en inteligencia artificial", "detalle": "La UPC prepara una especialización en inteligencia artificial para incorporar capacidades de IA en distintas carreras. La universidad también desarrolla acuerdos con Google Cloud para fortalecer formación y certificaciones tecnológicas.", "lugar": "Lima, Perú", "montoTxt": "No disponible", "montoUsd": null, "periodo": "Desde 2027", "web": "https://www.upc.edu.pe/", "vocero": "Jorge Bossio — director de Innovación Educativa", "perfil": "La Universidad Peruana de Ciencias Aplicadas (UPC) es una de las principales universidades privadas del Perú, parte del grupo Laureate International Universities. Reconocida por su enfoque en tecnología, negocios e innovación, es un referente en educación superior con sedes en Lima y provincias.", "sedes": "Lima (varias sedes), Perú.", "fuente": "upc.edu.pe"}, {"id": 20, "tipo": "Financiamiento", "rubro": "Banca / aumento de capital", "sectorMacro": "Banca y servicios financieros", "ruc": "20517476405", "razonSocial": "ALFIN BANCO S.A.", "nombreComercial": "Alfin Banco", "proyecto": "Aumento de capital social por S/ 15 millones", "detalle": "El directorio aprobó aumentar el capital social por aportes dinerarios por S/15 millones y emitir 31.26M acciones clase A y 4.84M acciones clase B. El capital social se elevaría a aproximadamente S/290.26 millones, sujeto a formalidades societarias.", "lugar": "Lima, Perú", "montoTxt": "S/ 15 millones", "montoUsd": 4000000, "periodo": "2026", "web": "https://www.alfinbanco.pe/", "vocero": "Rodolfo Weiss — presidente del Grupo Coril", "perfil": "Alfin Banco S.A. es el banco del Grupo Coril, un grupo económico peruano con presencia en sectores financieros y empresariales. Es una institución bancaria orientada al segmento corporativo y de medianas empresas en el Perú.", "sedes": "Lima, Perú.", "fuente": "alfinbanco.pe"}, {"id": 21, "tipo": "Financiamiento", "rubro": "Infraestructura aeroportuaria / crédito", "sectorMacro": "Banca y servicios financieros", "ruc": "20511230188", "razonSocial": "ANDINO INVESTMENT HOLDING S.A.C.", "nombreComercial": "Andino Investment Holding", "proyecto": "Crédito de hasta US$60M para inversiones en aeropuertos", "detalle": "Andino Investment Holding y el Fondo Cantabria suscribieron un mandato con Banco Santander Perú para estructurar un financiamiento de hasta US$60 millones, destinado a inversiones vinculadas con sus aeropuertos y activos aeroportuarios.", "lugar": "Perú", "montoTxt": "Hasta US$ 60 millones", "montoUsd": 60000000, "periodo": "2026", "web": "https://www.andino.com.pe/", "vocero": "-", "perfil": "Andino Investment Holding S.A.C. es el holding de inversiones del grupo Andino, con participación en concesiones aeroportuarias en el Perú. Gestiona activos de infraestructura de transporte y busca financiamiento para expandir y mejorar sus operaciones en aeropuertos del país.", "sedes": "Lima, Perú.", "fuente": "andino.com.pe"}, {"id": 22, "tipo": "Financiamiento", "rubro": "Energía eléctrica / línea de crédito", "sectorMacro": "Banca y servicios financieros", "ruc": "20330791412", "razonSocial": "ORYGEN PERÚ S.A.A.", "nombreComercial": "Orygen", "proyecto": "Ampliación de línea de crédito revolvente de US$100M", "detalle": "Orygen Perú amplió una línea de crédito revolvente por hasta US$100 millones con vencimiento en 2029. Los fondos podrán utilizarse para capital de trabajo, inversiones y necesidades generales de la compañía.", "lugar": "Perú", "montoTxt": "Hasta US$ 100 millones", "montoUsd": 100000000, "periodo": "2026-2029", "web": "https://www.orygen.com/", "vocero": "-", "perfil": "Orygen Perú S.A.A. es una empresa de distribución eléctrica en el Perú que opera en zonas de concesión del sistema de distribución eléctrica. Como empresa regulada, requiere financiamiento continuo para sus inversiones en infraestructura eléctrica y capital de trabajo.", "sedes": "Lima y zonas de concesión, Perú.", "fuente": "orygen.com"}]};
+const RECS = [{"num": "01", "title": "Minería, M&A y exploración: el cluster dominante", "anchor": "Palamina, Hochschild, Rio2, Soleil Mining, Alpayana, Nexa/Boliden", "text": "Seis empresas del sector minero esta semana, incluyendo dos M&A de alto impacto (Alpayana/Galantas US$61.3M y Nexa/Boliden ~US$1,300M). La actividad M&A minera abre oportunidades específicas para servicios de due diligence y asesoría.", "items": ["Due diligence técnico, legal y financiero para operaciones M&A mineras", "Servicios de exploración geológica y perforación de sondajes", "Asesoría legal especializada en transacciones mineras y fusiones internacionales", "Valoración de activos mineros y recursos para procesos de compraventa", "Software de modelamiento minero y evaluación de proyectos", "Gestión ambiental y social para nuevas concesiones y expansiones"]}, {"num": "02", "title": "Energía e hidrocarburos: inversión sostenida", "anchor": "Pluspetrol, El Rocío, Orygen", "text": "Tres empresas del sector energético: Pluspetrol con US$100M en Camisea, El Rocío con su proyecto solar en La Libertad y Orygen ampliando línea de crédito de US$100M. El ciclo de inversión en energía genera demanda sostenida de proveedores especializados.", "items": ["Ingeniería EPC para proyectos de energía solar fotovoltaica", "Servicios de perforación y gestión de pozos de gas natural", "Equipos y repuestos para centrales de distribución eléctrica", "Consultoría en regulación energética y concesiones (MEM, OSINERGMIN)", "Financiamiento de proyectos y estructuración de créditos para sector energético", "Estudios ambientales y de impacto para proyectos de energía renovable"]}, {"num": "03", "title": "Banca y servicios financieros: capital activo", "anchor": "Alfin Banco, Andino Investment Holding, Orygen", "text": "Tres empresas en captación de capital esta semana, con Andino estructurando US$60M para aeropuertos y Orygen ampliando US$100M en crédito revolvente. El sector financiero peruano mantiene alta actividad de financiamiento de proyectos.", "items": ["Consultoría en estructuración de deuda y financiamiento de infraestructura", "Asesoría legal en transacciones financieras y regulación bancaria (SBS)", "Auditoría especializada en instituciones financieras y bancos", "Sistemas de gestión de riesgos y cumplimiento regulatorio (compliance)", "Calificadoras de riesgo y agencias de rating para emisiones de deuda", "Servicios de banca de inversión y mercado de capitales"]}, {"num": "04", "title": "Retail, moda y consumo: expansión física y digital", "anchor": "Bata, North Beach, Dreame, Cinnabon", "text": "Cuatro marcas en expansión de retail esta semana: desde la renovación global de Bata hasta la alianza de Dreame con Ripley. El retail peruano sigue siendo un mercado activo para proveedores de diseño de tiendas y marketing.", "items": ["Diseño y construcción de tiendas y módulos de experiencia en malls", "Software POS, ERP de retail y sistemas de gestión de inventario", "Servicios de marketing digital, influencers y redes sociales para marcas retail", "Logística de última milla y distribución para expansión en provincias", "Consultoría en expansión de franquicias y nuevos formatos de retail", "Packaging, visual merchandising y señalética para puntos de venta"]}, {"num": "05", "title": "Agroindustria y alimentos: capacidad productiva", "anchor": "Machu Picchu Foods, Inka's Berries", "text": "Dos empresas agroindustriales con inversiones en infraestructura esta semana: Machu Picchu Foods con US$5.6M en nueva línea de cacao e Inka's Berries con nueva planta de empaque. El sector agroexportador peruano sigue en expansión.", "items": ["Maquinaria de procesamiento y secado de cacao, café y frutas", "Diseño e instalación de plantas de empaque y packing para exportación", "Certificaciones para exportación (orgánico, fair trade, rainforest alliance)", "Tecnología de cadena de frío para berries y productos perecibles", "Consultoría en acceso a mercados: Europa, Asia y Norteamérica", "Envases y empaques especializados para mercados internacionales"]}, {"num": "06", "title": "Tecnología, educación e inmobiliario", "anchor": "SETI, UPC, Menorca, Zoomlion", "text": "Cuatro empresas en sectores de tecnología, educación e inmobiliario: SETI instala su hub regional (US$2-3M), UPC lanza especialización en IA, Menorca invierte S/50M y Zoomlion expande su almacén. Múltiples oportunidades para proveedores B2B.", "items": ["Infraestructura IT, cloud y centros de datos para hubs tecnológicos regionales", "Plataformas e-learning y LMS para instituciones educativas", "Consultoría en IA aplicada y formación de talento digital", "Servicios inmobiliarios, gestión de proyectos y construcción residencial", "Maquinaria pesada, repuestos y mantenimiento preventivo para construcción", "Gestión de centros comerciales y consultoría de retail real estate"]}];
+const CALLOUT = "La semana del 24 al 31 de agosto 2026 está marcada por tres grandes ejes. Primero, la consolidación M&A en minería: Alpayana compra Galantas Gold (Irlanda) por US$61.3M y Boliden acuerda tomar el control de Nexa Resources (~US$1,300M), señal de que el Perú se ha convertido en plataforma de adquisiciones mineras con proyección internacional. Segundo, la inversión en energía: Pluspetrol confirma US$100M en Camisea y Orygen capta US$100M en crédito revolvente, evidenciando que el sector energético peruano mantiene un ciclo de inversión activo. Tercero, el retail continúa en movimiento con cuatro marcas expandiéndose en Lima y provincias. Para empresas proveedoras, las oportunidades más inmediatas están en due diligence M&A para el sector minero, ingeniería energética y diseño de tiendas para el retail en expansión.";
+(function(){
+  const records = DATA.records;
+  const fmtUSD = n => {
+    if(!n) return '';
+    if(n>=1e9) return 'US$ '+(n/1e9).toFixed(1)+' B';
+    if(n>=1e6){ const m=n/1e6; return 'US$ '+(m>=100?Math.round(m):(Math.round(m*10)/10))+' M'; }
+    return 'US$ '+(n/1e3).toFixed(0)+' mil';
+  };
+  function esc(s){ return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  const nInv=records.filter(r=>r.tipo==='Inversion').length;
+  const nMA=records.filter(r=>r.tipo==='M&A').length;
+  const nEst=records.filter(r=>r.tipo==='Estrategia').length;
+  const nFin=records.filter(r=>r.tipo==='Financiamiento').length;
+  const macros=[...new Set(records.map(r=>r.sectorMacro))];
+  const totalUSD=records.reduce((s,r)=>s+(r.montoUsd||0),0);
+
+  document.getElementById('kpiRow').innerHTML=`
+    <div class="kpi gold"><div class="k-label">Inversión confirmada</div><div class="k-val">${fmtUSD(totalUSD)}</div><div class="k-sub">Pluspetrol US$100M + Orygen US$100M lideran</div></div>
+    <div class="kpi"><div class="k-label">Empresas mapeadas</div><div class="k-val">${records.length}</div><div class="k-sub">${nInv} inversión · ${nMA} M&A · ${nEst} estrategia · ${nFin} financiamiento</div></div>
+    <div class="kpi teal"><div class="k-label">Segmentos activos</div><div class="k-val">${macros.length}</div><div class="k-sub">4 tipos de iniciativa esta semana</div></div>
+    <div class="kpi"><div class="k-label">Mayor operación M&A</div><div class="k-val">US$1,300M</div><div class="k-sub">Boliden adquiere Nexa Resources (cierre 2027)</div></div>`;
+
+  const tt=document.getElementById('tickerTrack');
+  const items=records.map(r=>{
+    const cls=r.tipo==='M&A'?'ma':r.tipo==='Financiamiento'?'fi':r.tipo==='Estrategia'?'tp':'';
+    const m=r.montoUsd?fmtUSD(r.montoUsd):r.montoTxt!=='No disponible'?r.montoTxt.substring(0,25):'monto no informado';
+    return `<span class="ticker-item"><b class="${cls}">${r.nombreComercial}</b> — ${r.rubro} · ${m}</span>`;
+  });
+  tt.innerHTML=items.concat(items).join('<span class="ticker-item" style="color:var(--gold);">◆</span>');
+
+  const macroCounts={};
+  records.forEach(r=>macroCounts[r.sectorMacro]=(macroCounts[r.sectorMacro]||0)+1);
+  const sortedMacro=Object.keys(macroCounts).sort((a,b)=>macroCounts[b]-macroCounts[a]);
+  const chips=document.getElementById('segmentChips');
+  const sel=document.getElementById('rubroSelect');
+  chips.innerHTML='<button class="seg-chip active" data-macro="Todos">Todos los segmentos <span class="cnt">'+records.length+'</span></button>'+
+    sortedMacro.map(m=>`<button class="seg-chip" data-macro="${esc(m)}">${m} <span class="cnt">${macroCounts[m]}</span></button>`).join('');
+  sortedMacro.forEach(m=>{ const o=document.createElement('option'); o.value=m; o.textContent=m+' ('+macroCounts[m]+')'; sel.appendChild(o); });
+  const maxC=Math.max(...sortedMacro.map(m=>macroCounts[m]));
+  document.getElementById('sectorBars').innerHTML=sortedMacro.map(m=>`
+    <div class="sbar-row" data-macro="${esc(m)}">
+      <div class="sbar-label">${m}</div>
+      <div class="sbar-track"><div class="sbar-fill" style="width:${Math.round(macroCounts[m]/maxC*100)}%"></div></div>
+      <div class="sbar-val">${macroCounts[m]} anuncio${macroCounts[m]>1?'s':''}</div>
+    </div>`).join('');
+
+  let state={tipo:'Todos',macro:'Todos',search:'',sort:'montoDesc'};
+  function applyFilters(){
+    return records.filter(r=>{
+      if(state.tipo!=='Todos'&&r.tipo!==state.tipo) return false;
+      if(state.macro!=='Todos'&&r.sectorMacro!==state.macro) return false;
+      if(state.search){
+        const hay=(r.nombreComercial+' '+r.razonSocial+' '+r.proyecto+' '+r.lugar+' '+r.rubro).toLowerCase();
+        if(!hay.includes(state.search.toLowerCase())) return false;
+      }
+      return true;
+    }).sort((a,b)=>{
+      if(state.sort==='montoDesc') return (b.montoUsd||-1)-(a.montoUsd||-1);
+      if(state.sort==='az') return a.nombreComercial.localeCompare(b.nombreComercial,'es');
+      if(state.sort==='tipo') return a.tipo.localeCompare(b.tipo);
+      return 0;
+    });
+  }
+
+  function getBadge(tipo){
+    if(tipo==='Inversion') return ['inv','Inversión'];
+    if(tipo==='M&A') return ['ma','M&A'];
+    if(tipo==='Estrategia') return ['est','Estrategia'];
+    if(tipo==='Financiamiento') return ['fin','Financiamiento'];
+    return ['inv',tipo];
+  }
+
+  function renderCards(){
+    const list=applyFilters();
+    document.getElementById('resultCount').textContent=list.length+' de '+records.length+' empresas';
+    document.getElementById('cardGrid').innerHTML=list.map(r=>{
+      const [bc,bt]=getBadge(r.tipo);
+      const monto=r.montoUsd?`<div class="card-monto">${fmtUSD(r.montoUsd)}</div>`:`<div class="card-monto na">${esc(r.montoTxt.substring(0,30))}</div>`;
+      return `<article class="card" data-id="${r.id}" tabindex="0">
+        <div class="card-top"><span class="badge ${bc}">${bt}</span></div>
+        <div><div class="card-rubro">${esc(r.rubro)}</div><h3>${esc(r.nombreComercial)}</h3></div>
+        <div class="proyecto">${esc(r.proyecto)}</div>
+        <div class="card-foot">${monto}<div class="card-lugar">${esc(r.lugar)}</div></div>
+      </article>`;
+    }).join('');
+    document.querySelectorAll('.card').forEach(c=>{
+      c.addEventListener('click',()=>openModal(parseInt(c.dataset.id)));
+      c.addEventListener('keypress',e=>{if(e.key==='Enter')openModal(parseInt(c.dataset.id));});
+    });
+  }
+
+  const overlay=document.getElementById('modalOverlay');
+  function openModal(id){
+    const r=records.find(x=>x.id===id); if(!r) return;
+    const [bc,bt]=getBadge(r.tipo);
+    const webLink=(r.web&&r.web.startsWith('http'))?`<a class="btn-web" href="${r.web}" target="_blank" rel="noopener">Visitar sitio oficial ↗</a>`:'';
+    document.getElementById('modalBox').innerHTML=`
+      <div class="modal-head">
+        <button class="modal-close" id="mcls" aria-label="Cerrar">✕</button>
+        <div class="modal-badges"><span class="badge ${bc}">${bt}</span><span class="badge" style="background:rgba(20,33,44,0.08);color:#5c6b78;">${esc(r.rubro)}</span></div>
+        <h2>${esc(r.nombreComercial)}</h2>
+        <div class="razon">${esc(r.razonSocial)}${r.ruc&&r.ruc!=='-'?' · RUC '+r.ruc:''}</div>
+      </div>
+      <div class="modal-body">
+        <div class="mfield"><div class="flabel">Proyecto o estrategia</div><div class="fval" style="font-family:var(--font-display);font-size:17px;font-weight:600;">${esc(r.proyecto)}</div></div>
+        <div class="mfield"><div class="flabel">Detalle</div><div class="fval">${esc(r.detalle)}</div></div>
+        <div class="mgrid">
+          <div class="mfield" style="margin:0"><div class="flabel">Monto</div><div class="fval">${esc(r.montoTxt)}</div></div>
+          <div class="mfield" style="margin:0"><div class="flabel">Período</div><div class="fval">${esc(r.periodo)}</div></div>
+          <div class="mfield" style="margin:0"><div class="flabel">Lugar</div><div class="fval">${esc(r.lugar)}</div></div>
+          <div class="mfield" style="margin:0"><div class="flabel">Vocero / ejecutivo</div><div class="fval">${esc(r.vocero)}</div></div>
+        </div>
+        <div class="profile-box">
+          <div class="flabel">📋 Perfil de la empresa</div>
+          <div class="fval">${esc(r.perfil)}</div>
+          <div class="mfield" style="margin:14px 0 0"><div class="flabel">Sedes / presencia</div><div class="fval" style="font-size:13.5px;">${esc(r.sedes)}</div></div>
+          <div class="source-line">Fuente del perfil: ${esc(r.fuente)}. Consultado en agosto de 2026.</div>
+        </div>
+        <div style="margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;">
+          ${webLink}
+          <button class="btn-ai" id="btnAI_${r.id}" onclick="loadAIProfile(${r.id})">🤖 Ampliar perfil con IA</button>
+        </div>
+        <div id="aiResult_${r.id}"></div>
+      </div>`;
+    document.getElementById('mcls').addEventListener('click',closeModal);
+    overlay.classList.add('open'); document.body.style.overflow='hidden';
+  }
+
+  window.loadAIProfile=async function(id){
+    const r=records.find(x=>x.id===id); if(!r) return;
+    const btn=document.getElementById('btnAI_'+id);
+    const out=document.getElementById('aiResult_'+id);
+    btn.disabled=true; btn.textContent='🔄 Buscando…';
+    out.innerHTML=`<div class="ai-result"><em style="color:#5c7085;">Consultando información pública de ${esc(r.nombreComercial)}…</em></div>`;
+    try{
+      const prompt=`Eres analista de la consultora José Carlos Lumbreras (Perú). Busca información pública actualizada de esta empresa y responde SOLO con JSON válido sin markdown:
+Empresa: ${r.nombreComercial} | Razón social: ${r.razonSocial} | Sector: ${r.rubro} | Web: ${r.web||'N/D'} | País: Perú
+{"resumen":"2-3 oraciones","fundacion":"año o N/D","empleados":"estimado o N/D","logros":["logro1","logro2","logro3"],"oportunidades":["qué ofrecerle1","qué ofrecerle2","qué ofrecerle3"],"fuente":"fuente consultada"}
+Solo información verificable. Si no puedes verificar escribe N/D.`;
+      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({model:"claude-sonnet-4-6",max_tokens:800,tools:[{type:"web_search_20250305",name:"web_search"}],messages:[{role:"user",content:prompt}]})});
+      const data=await res.json();
+      const txt=(data.content||[]).filter(b=>b.type==='text').map(b=>b.text).join('\n');
+      const m=txt.match(/\{[\s\S]*\}/); const info=JSON.parse(m?m[0]:txt);
+      out.innerHTML=`<div class="ai-result">
+        <strong style="font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#5c6b78;">Perfil ampliado — búsqueda web en tiempo real</strong>
+        <p style="margin:10px 0 8px;">${esc(info.resumen||'')}</p>
+        ${info.fundacion&&info.fundacion!=='N/D'?`<p style="margin:4px 0;font-size:13px;"><b>Fundación:</b> ${esc(info.fundacion)}</p>`:''}
+        ${info.empleados&&info.empleados!=='N/D'?`<p style="margin:4px 0;font-size:13px;"><b>Empleados:</b> ${esc(info.empleados)}</p>`:''}
+        ${info.logros?.length?`<p style="margin:10px 0 4px;font-size:12px;text-transform:uppercase;color:#5c6b78;">Aspectos destacados</p><ul style="margin:0 0 8px;padding-left:16px;font-size:13px;">${info.logros.map(l=>`<li>${esc(l)}</li>`).join('')}</ul>`:''}
+        ${info.oportunidades?.length?`<p style="margin:8px 0 4px;font-size:12px;text-transform:uppercase;color:#8a7a54;">💡 Oportunidades de negocio</p><ul style="margin:0;padding-left:16px;font-size:13px;">${info.oportunidades.map(o=>`<li>${esc(o)}</li>`).join('')}</ul>`:''}
+        ${info.fuente&&info.fuente!=='N/D'?`<p style="margin:10px 0 0;font-size:11px;color:#6b7b88;">Fuente IA: ${esc(info.fuente)}</p>`:''}
+        <p style="margin:8px 0 0;font-size:10px;color:#8a9aaa;">⚠️ Generado por IA. Verifique con la empresa.</p>
+      </div>`;
+    }catch(e){ out.innerHTML='<div class="ai-result"><em style="color:#5c7085;">No se pudo cargar el perfil ampliado.</em></div>'; }
+    btn.disabled=false; btn.textContent='🤖 Ampliar perfil con IA';
+  };
+
+  function closeModal(){ overlay.classList.remove('open'); document.body.style.overflow=''; }
+  overlay.addEventListener('click',e=>{ if(e.target===overlay) closeModal(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeModal(); });
+  document.getElementById('searchInput').addEventListener('input',e=>{ state.search=e.target.value; renderCards(); });
+  document.getElementById('sortSelect').addEventListener('change',e=>{ state.sort=e.target.value; renderCards(); });
+  document.getElementById('rubroSelect').addEventListener('change',e=>{ state.macro=e.target.value; syncChips(); renderCards(); });
+  document.getElementById('typeToggle').addEventListener('click',e=>{
+    const b=e.target.closest('button'); if(!b) return;
+    document.querySelectorAll('#typeToggle button').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active'); state.tipo=b.dataset.type; renderCards();
+  });
+  document.getElementById('segmentChips').addEventListener('click',e=>{
+    const b=e.target.closest('.seg-chip'); if(!b) return;
+    state.macro=b.dataset.macro; document.getElementById('rubroSelect').value=state.macro;
+    syncChips(); renderCards();
+    document.getElementById('empresas').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  document.getElementById('sectorBars').addEventListener('click',e=>{
+    const row=e.target.closest('.sbar-row'); if(!row) return;
+    state.macro=row.dataset.macro; document.getElementById('rubroSelect').value=state.macro;
+    syncChips(); renderCards();
+    document.getElementById('empresas').scrollIntoView({behavior:'smooth',block:'start'});
+  });
+  function syncChips(){ document.querySelectorAll('.seg-chip').forEach(c=>c.classList.toggle('active',c.dataset.macro===state.macro)); }
+  document.getElementById('recGrid').innerHTML=RECS.map(r=>`
+    <div class="rec-card"><div class="rec-num">${r.num}</div><h3>${r.title}</h3>
+    <div class="rec-anchor">Empresas ancla: <b>${r.anchor}</b></div>
+    <p>${r.text}</p><ul>${r.items.map(i=>`<li>${i}</li>`).join('')}</ul></div>`).join('');
+  document.getElementById('calloutText').textContent=CALLOUT;
+  renderCards();
+})();
+</script>
+</body>
+</html>
