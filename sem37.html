@@ -266,9 +266,24 @@ footer .brand{font-family:var(--font-display);font-size:18px;color:var(--off);ma
   100%{box-shadow:none;border-color:var(--line);background:var(--panel);}
 }
 .card.highlighted{animation:cardHighlight 2.4s ease-out forwards;border-color:var(--gold)!important;}
+
+/* ── VOLVER AL HUB ── */
+.hub-back-bar{background:#08111B;border-bottom:1px solid rgba(237,233,221,0.10);padding:0 6vw;height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.hub-back-link{display:inline-flex;align-items:center;gap:8px;font-family:'IBM Plex Mono',monospace;font-size:12.5px;font-weight:600;color:#D8AD52;text-decoration:none;padding:6px 12px;border:1px solid rgba(216,173,82,0.35);border-radius:100px;background:rgba(216,173,82,0.10);transition:background .15s;}
+.hub-back-link:hover{background:rgba(216,173,82,0.22);}
+.hub-back-brand{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#5C7085;}
+.hub-back-fab{position:fixed;left:20px;bottom:24px;z-index:290;display:inline-flex;align-items:center;gap:7px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:700;color:#ECE7DA;background:#16283C;border:1px solid rgba(216,173,82,0.45);padding:10px 15px;border-radius:100px;text-decoration:none;box-shadow:0 4px 18px rgba(0,0,0,0.4);transition:transform .15s,border-color .15s;}
+.hub-back-fab:hover{transform:translateY(-2px);border-color:#D8AD52;color:#D8AD52;}
+@media(max-width:600px){.hub-back-brand{display:none;}.hub-back-fab span.txt{display:none;}}
 </style>
 </head>
 <body>
+<div class="hub-back-bar">
+  <a class="hub-back-link" href="index.html">← Volver al Radar principal</a>
+  <span class="hub-back-brand">José Carlos Lumbreras · Radar de Inversiones</span>
+</div>
+<a class="hub-back-fab" href="index.html" title="Volver al Radar principal">🏠 <span class="txt">Inicio</span></a>
+
 
 <div class="ticker-wrap" aria-hidden="true">
   <div class="ticker-track" id="tickerTrack"></div>
@@ -750,6 +765,23 @@ Responde SOLO JSON sin markdown: {"resumen":"2-3 oraciones","fundacion":"N/D","e
   // INIT
   renderTicker();
   switchCountry('peru');
+  // Abrir una ficha directamente desde un enlace: sem37.html#ficha=ID&pais=peru
+  (function(){
+    var m = location.hash.match(/ficha=(\d+)/);
+    if(!m) return;
+    var id = parseInt(m[1], 10);
+    var p = location.hash.match(/pais=(\w+)/);
+    var pais = (p && COUNTRIES[p[1]]) ? p[1] : 'peru';
+    setTimeout(function(){
+      if(activeCountry !== pais) switchCountry(pais);
+      requestAnimationFrame(function(){
+        var card = document.querySelector('.card[data-id="'+id+'"]');
+        if(card){ card.scrollIntoView({block:'center'}); card.classList.add('highlighted'); }
+        openModal(id, COUNTRIES[pais].records);
+      });
+    }, 300);
+  })();
+
 })();
 </script>
 
